@@ -15,4 +15,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OrderWebsiteASP.Data.Models\OrderWebsiteASP.Data.Models.csproj" />
+    <ProjectReference Include="..\OrderWebsiteASP.GCommon\OrderWebsiteASP.GCommon.csproj" />
+    <ProjectReference Include="..\OrderWebsiteASP.ViewModels\OrderWebsiteASP.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>
