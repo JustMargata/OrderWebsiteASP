@@ -31,24 +31,56 @@ header.header {
     color: white;
 }
 
+    header.header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     header.header .navbar-brand {
         font-size: 2rem;
         font-weight: bold;
         color: white;
+        text-decoration: none;
     }
 
-    header.header nav a.btn {
-        font-size: 1.1rem;
-        margin-left: 10px;
-        border-color: white;
-        color: white;
-    }
-
-        header.header nav a.btn:hover {
-            background-color: white;
-            color: #00b84d;
-            transform: translateY(-2px);
+        header.header .navbar-brand:hover {
+            color: white;
         }
+
+    header.header .nav-link-custom {
+        color: white;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+        padding: 5px 10px;
+        border-bottom: 2px solid transparent;
+        display: inline-block;
+    }
+
+        header.header .nav-link-custom:hover {
+            color: #e0f7ed;
+            border-bottom-color: white;
+        }
+
+    header.header nav {
+        display: flex;
+        align-items: center;
+    }
+
+        header.header nav a.btn {
+            font-size: 1.1rem;
+            margin-left: 10px;
+            border-color: white;
+            color: white;
+        }
+
+            header.header nav a.btn:hover {
+                background-color: white;
+                color: #00b84d;
+                transform: translateY(-2px);
+            }
 
     header.header form button.btn-light {
         font-size: 1.1rem;
@@ -56,6 +88,20 @@ header.header {
         border-color: white;
         color: white;
     }
+
+        header.header form button.btn-light:hover {
+            background-color: white;
+            color: #00b84d;
+        }
+
+    header.header a {
+        color: white;
+        text-decoration: none;
+    }
+
+        header.header a:hover {
+            color: #eaffea;
+        }
 
 main {
     flex: 1;
