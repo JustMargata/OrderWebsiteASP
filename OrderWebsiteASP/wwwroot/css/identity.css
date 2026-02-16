@@ -1,0 +1,140 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 20px 0;
+}
+
+    main .row {
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        flex-direction: column;
+    }
+
+        main .row > div:first-child {
+            order: 1;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+            main .row > div:first-child h2 {
+                font-size: 2.5rem;
+                font-weight: 300;
+                color: #2d3748;
+                margin: 0;
+                letter-spacing: 1px;
+            }
+
+.col-md-4 {
+    order: 2;
+    background: linear-gradient(135deg, #56dbbc, #00b84d);
+    padding: 50px 60px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    color: white;
+    margin: 0;
+    max-width: 500px;
+    width: 100%;
+}
+
+    .col-md-4 h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        color: white;
+        font-size: 1.8rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        line-height: 1.4;
+    }
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 50px;
+    padding: 12px 18px;
+    border: none;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #222;
+
+}
+
+.btn-primary {
+    width: 100%;
+    border-radius: 50px;
+    padding: 12px;
+    background: white;
+    color: #00b84d;
+    font-weight: bold;
+    border: none;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+    .btn-primary:hover {
+        background: #00b84d;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+a {
+    color: white;
+    text-decoration: underline;
+}
+
+    a:hover {
+        color: #eaffea;
+    }
+
+.form-check-input {
+    border-radius: 5px;
+}
+
+.form-check {
+    margin-bottom: 20px;
+}
+
+.text-danger {
+    color: #ffe6e6 !important;
+}
+
+section h3, section hr, section p {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+}
+
+section {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+footer {
+    margin-top: auto;
+    padding: 15px 0;
+    text-align: center;
+}

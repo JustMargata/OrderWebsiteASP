@@ -1,32 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderWebsiteASP.Models;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using OrderWebsiteASP.Data;
 
-namespace OrderWebsiteASP.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ApplicationDbContext _db;
+
+    public HomeController(ApplicationDbContext db)
     {
-        private readonly ILogger<HomeController> _logger;
+        _db = db;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public IActionResult Index()
+    {
+        var restaurants = _db.Restaurants
+            .Include(r => r.FoodItems)
+            .ToList();
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        return View(restaurants);
     }
 }
