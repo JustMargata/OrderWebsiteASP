@@ -5,6 +5,7 @@ namespace OrderWebsiteASP.Services.Core.Contracts
     public interface IRestaurantService
     {
         Task<IEnumerable<Restaurant>> GetAllAsync();
+        Task<IEnumerable<Restaurant>> GetAllForSelectAsync();
         Task<Restaurant?> GetByIdAsync(int id);
         Task CreateAsync(string name, string address, string? imageUrl);
         Task EditAsync(int id, string name, string address, string? imageUrl);

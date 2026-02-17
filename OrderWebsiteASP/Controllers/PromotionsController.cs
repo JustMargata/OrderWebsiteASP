@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using OrderWebsiteASP.Data;
 using OrderWebsiteASP.Data.Models;
 using OrderWebsiteASP.Services.Core.Contracts;
 
@@ -10,20 +9,22 @@ namespace OrderWebsiteASP.Controllers
     public class PromotionsController : BaseController
     {
         private readonly IPromotionService _promotionService;
-        private readonly ApplicationDbContext _context;
+        private readonly IRestaurantService _restaurantService;
 
-        public PromotionsController(IPromotionService promotionService, ApplicationDbContext context)
+        public PromotionsController(IPromotionService promotionService, IRestaurantService restaurantService)
         {
             _promotionService = promotionService;
-            _context = context;
+            _restaurantService = restaurantService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var promotions = await _promotionService.GetActivePromotionsAsync();
             return View(promotions);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -35,9 +36,10 @@ namespace OrderWebsiteASP.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Restaurants = new SelectList(_context.Restaurants, "Id", "Name");
+            var restaurants = await _restaurantService.GetAllForSelectAsync();
+            ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name");
             return View();
         }
 
@@ -50,7 +52,8 @@ namespace OrderWebsiteASP.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Restaurants = new SelectList(_context.Restaurants, "Id", "Name");
+                var restaurants = await _restaurantService.GetAllForSelectAsync();
+                ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name");
                 return View(promotion);
             }
 
@@ -66,7 +69,8 @@ namespace OrderWebsiteASP.Controllers
             var promotion = await _promotionService.GetByIdAsync(id.Value);
             if (promotion == null) return NotFound();
 
-            ViewBag.Restaurants = new SelectList(_context.Restaurants, "Id", "Name", promotion.RestaurantId);
+            var restaurants = await _restaurantService.GetAllForSelectAsync();
+            ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name", promotion.RestaurantId);
             return View(promotion);
         }
 
@@ -81,7 +85,8 @@ namespace OrderWebsiteASP.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Restaurants = new SelectList(_context.Restaurants, "Id", "Name", promotion.RestaurantId);
+                var restaurants = await _restaurantService.GetAllForSelectAsync();
+                ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name", promotion.RestaurantId);
                 return View(promotion);
             }
 

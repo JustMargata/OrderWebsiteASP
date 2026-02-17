@@ -1,24 +1,23 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OrderWebsiteASP.Data;
+using OrderWebsiteASP.Services.Core.Contracts;
 
-public class HomeController : Controller
+namespace OrderWebsiteASP.Controllers
 {
-    private readonly ApplicationDbContext _db;
-
-    public HomeController(ApplicationDbContext db)
+    public class HomeController : BaseController
     {
-        _db = db;
-    }
+        private readonly IRestaurantService _restaurantService;
 
-    [AllowAnonymous]
-    public IActionResult Index()
-    {
-        var restaurants = _db.Restaurants
-            .Include(r => r.FoodItems)
-            .ToList();
+        public HomeController(IRestaurantService restaurantService)
+        {
+            _restaurantService = restaurantService;
+        }
 
-        return View(restaurants);
+        [AllowAnonymous]
+        public async Task<IActionResult> Index()
+        {
+            var restaurants = await _restaurantService.GetAllAsync();
+            return View(restaurants);
+        }
     }
 }

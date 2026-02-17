@@ -1,4 +1,4 @@
-﻿@model OrderWebsiteASP.Data.Models.FoodItem
+﻿@model OrderWebsiteASP.ViewModels.FoodItems.FoodItemDeleteViewModel
 @{
     ViewData["Title"] = "Delete Food Item";
 }
@@ -23,7 +23,7 @@
                 <dd class="col-sm-9">$@Model.Price.ToString("F2")</dd>
 
                 <dt class="col-sm-3">Restaurant</dt>
-                <dd class="col-sm-9">@Model.Restaurant.Name</dd>
+                <dd class="col-sm-9">@Model.RestaurantName</dd>
             </dl>
         </div>
     </div>

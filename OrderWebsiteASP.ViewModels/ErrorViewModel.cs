@@ -1,4 +1,4 @@
-namespace OrderWebsiteASP.Models
+namespace OrderWebsiteASP.ViewModels
 {
     public class ErrorViewModel
     {

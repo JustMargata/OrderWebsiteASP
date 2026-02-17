@@ -21,6 +21,13 @@ namespace OrderWebsiteASP.Services.Core
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Restaurant>> GetAllForSelectAsync()
+        {
+            return await _context.Restaurants
+                .OrderBy(r => r.Name)
+                .ToListAsync();
+        }
+
         public async Task<Restaurant?> GetByIdAsync(int id)
         {
             return await _context.Restaurants

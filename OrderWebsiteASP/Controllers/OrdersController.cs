@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OrderWebsiteASP.Services.Core.Contracts;
 
@@ -9,12 +8,10 @@ namespace OrderWebsiteASP.Controllers
     public class OrdersController : BaseController
     {
         private readonly IOrderService _orderService;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public OrdersController(IOrderService orderService, UserManager<IdentityUser> userManager)
+        public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
-            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -28,7 +25,7 @@ namespace OrderWebsiteASP.Controllers
         {
             if (id == null) return NotFound();
 
-            var userId = _userManager.GetUserId(User);
+            var userId = GetUserId();
             var order = await _orderService.GetOrderByIdAsync(id.Value, userId);
 
             if (order == null) return NotFound();
@@ -40,7 +37,7 @@ namespace OrderWebsiteASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int foodItemId, int restaurantId)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = GetUserId();
             await _orderService.AddToCartAsync(foodItemId, restaurantId, userId);
 
             TempData["Success"] = "Item was added to your order!";
@@ -59,7 +56,7 @@ namespace OrderWebsiteASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = GetUserId();
             await _orderService.CancelOrderAsync(orderId, userId);
             return RedirectToAction(nameof(Index));
         }

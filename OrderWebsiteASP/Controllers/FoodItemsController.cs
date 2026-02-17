@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderWebsiteASP.Services.Core.Contracts;
+using OrderWebsiteASP.ViewModels.FoodItems;
 
 namespace OrderWebsiteASP.Controllers
 {
@@ -16,22 +17,21 @@ namespace OrderWebsiteASP.Controllers
 
         public IActionResult Create(int restaurantId)
         {
-            ViewBag.RestaurantId = restaurantId;
-            return View();
+            var model = new FoodItemCreateViewModel
+            {
+                RestaurantId = restaurantId
+            };
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string name, decimal price, string? imageUrl, int restaurantId)
+        public async Task<IActionResult> Create(FoodItemCreateViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.RestaurantId = restaurantId;
-                return View();
-            }
+            if (!ModelState.IsValid) return View(model);
 
-            await _foodItemService.CreateAsync(name, price, imageUrl, restaurantId);
-            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
+            await _foodItemService.CreateAsync(model.Name, model.Price, model.ImageUrl, model.RestaurantId);
+            return RedirectToAction("Details", "Restaurants", new { id = model.RestaurantId });
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -41,23 +41,28 @@ namespace OrderWebsiteASP.Controllers
             var foodItem = await _foodItemService.GetByIdAsync(id.Value);
             if (foodItem == null) return NotFound();
 
-            return View(foodItem);
+            var model = new FoodItemEditViewModel
+            {
+                Id = foodItem.Id,
+                Name = foodItem.Name,
+                Price = foodItem.Price,
+                ImageUrl = foodItem.ImageUrl,
+                RestaurantId = foodItem.RestaurantId
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string name, decimal price, string? imageUrl, int restaurantId)
+        public async Task<IActionResult> Edit(int id, FoodItemEditViewModel model)
         {
-            if (!await _foodItemService.ExistsAsync(id)) return NotFound();
+            if (id != model.Id) return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                var foodItem = await _foodItemService.GetByIdAsync(id);
-                return View(foodItem);
-            }
+            if (!ModelState.IsValid) return View(model);
 
-            await _foodItemService.EditAsync(id, name, price, imageUrl, restaurantId);
-            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
+            await _foodItemService.EditAsync(model.Id, model.Name, model.Price, model.ImageUrl, model.RestaurantId);
+            return RedirectToAction("Details", "Restaurants", new { id = model.RestaurantId });
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -67,7 +72,17 @@ namespace OrderWebsiteASP.Controllers
             var foodItem = await _foodItemService.GetByIdWithRestaurantAsync(id.Value);
             if (foodItem == null) return NotFound();
 
-            return View(foodItem);
+            var model = new FoodItemDeleteViewModel
+            {
+                Id = foodItem.Id,
+                Name = foodItem.Name,
+                Price = foodItem.Price,
+                ImageUrl = foodItem.ImageUrl,
+                RestaurantId = foodItem.RestaurantId,
+                RestaurantName = foodItem.Restaurant.Name
+            };
+
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]

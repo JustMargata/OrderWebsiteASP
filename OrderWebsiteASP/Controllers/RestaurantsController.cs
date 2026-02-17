@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderWebsiteASP.Services.Core.Contracts;
+using OrderWebsiteASP.ViewModels.Restaurants;
 
 namespace OrderWebsiteASP.Controllers
 {
@@ -39,11 +40,11 @@ namespace OrderWebsiteASP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Name,Address,ImageUrl")] string name, string address, string? imageUrl)
+        public async Task<IActionResult> Create(RestaurantCreateViewModel model)
         {
-            if (!ModelState.IsValid) return View();
+            if (!ModelState.IsValid) return View(model);
 
-            await _restaurantService.CreateAsync(name, address, imageUrl);
+            await _restaurantService.CreateAsync(model.Name, model.Address, model.ImageUrl);
             return RedirectToAction(nameof(Index));
         }
 
@@ -55,23 +56,27 @@ namespace OrderWebsiteASP.Controllers
             var restaurant = await _restaurantService.GetByIdAsync(id.Value);
             if (restaurant == null) return NotFound();
 
-            return View(restaurant);
+            var model = new RestaurantEditViewModel
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Address = restaurant.Address,
+                ImageUrl = restaurant.ImageUrl
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, string name, string address, string? imageUrl)
+        public async Task<IActionResult> Edit(int id, RestaurantEditViewModel model)
         {
-            if (!await _restaurantService.ExistsAsync(id)) return NotFound();
+            if (id != model.Id) return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                var restaurant = await _restaurantService.GetByIdAsync(id);
-                return View(restaurant);
-            }
+            if (!ModelState.IsValid) return View(model);
 
-            await _restaurantService.EditAsync(id, name, address, imageUrl);
+            await _restaurantService.EditAsync(model.Id, model.Name, model.Address, model.ImageUrl);
             return RedirectToAction(nameof(Index));
         }
 
@@ -83,7 +88,15 @@ namespace OrderWebsiteASP.Controllers
             var restaurant = await _restaurantService.GetByIdAsync(id.Value);
             if (restaurant == null) return NotFound();
 
-            return View(restaurant);
+            var model = new RestaurantDeleteViewModel
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Address = restaurant.Address,
+                ImageUrl = restaurant.ImageUrl
+            };
+
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]
