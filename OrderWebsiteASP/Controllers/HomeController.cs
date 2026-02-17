@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrderWebsiteASP.Data;
@@ -11,6 +12,7 @@ public class HomeController : Controller
         _db = db;
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
         var restaurants = _db.Restaurants

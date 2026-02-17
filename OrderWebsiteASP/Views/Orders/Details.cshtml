@@ -1,5 +1,4 @@
 ﻿@model OrderWebsiteASP.Data.Models.Order
-
 @{
     ViewData["Title"] = "Order Details";
 }
@@ -73,3 +72,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

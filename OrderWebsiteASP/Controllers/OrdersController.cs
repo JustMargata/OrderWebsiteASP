@@ -6,7 +6,7 @@ using OrderWebsiteASP.Services.Core.Contracts;
 namespace OrderWebsiteASP.Controllers
 {
     [Authorize]
-    public class OrdersController : Controller
+    public class OrdersController : BaseController
     {
         private readonly IOrderService _orderService;
         private readonly UserManager<IdentityUser> _userManager;
@@ -19,7 +19,7 @@ namespace OrderWebsiteASP.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = GetUserId();
             var orders = await _orderService.GetUserOrdersAsync(userId);
             return View(orders);
         }

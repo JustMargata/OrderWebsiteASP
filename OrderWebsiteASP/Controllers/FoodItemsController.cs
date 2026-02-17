@@ -5,7 +5,7 @@ using OrderWebsiteASP.Services.Core.Contracts;
 namespace OrderWebsiteASP.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class FoodItemsController : Controller
+    public class FoodItemsController : BaseController
     {
         private readonly IFoodItemService _foodItemService;
 

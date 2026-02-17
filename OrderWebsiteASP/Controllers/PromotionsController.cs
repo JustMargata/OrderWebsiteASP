@@ -7,7 +7,7 @@ using OrderWebsiteASP.Services.Core.Contracts;
 
 namespace OrderWebsiteASP.Controllers
 {
-    public class PromotionsController : Controller
+    public class PromotionsController : BaseController
     {
         private readonly IPromotionService _promotionService;
         private readonly ApplicationDbContext _context;

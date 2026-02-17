@@ -1,9 +1,7 @@
 ﻿@model OrderWebsiteASP.Data.Models.Promotion
-
 @{
     ViewData["Title"] = "Delete Promotion";
 }
-
 <div class="container">
     <h2><i class="bi bi-trash"></i> Delete Promotion</h2>
 
@@ -46,3 +44,9 @@
         </a>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

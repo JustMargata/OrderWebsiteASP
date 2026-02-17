@@ -5,7 +5,7 @@ using OrderWebsiteASP.Services.Core.Contracts;
 namespace OrderWebsiteASP.Controllers
 {
     [Authorize]
-    public class RestaurantsController : Controller
+    public class RestaurantsController : BaseController
     {
         private readonly IRestaurantService _restaurantService;
 
