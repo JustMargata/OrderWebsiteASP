@@ -17,6 +17,9 @@ namespace OrderWebsiteASP.Data.Models
         [Range((double)FoodItemMinPrice, (double)FoodItemMaxPrice)]
         public decimal Price { get; set; }
 
+        [StringLength(FoodItemImageUrlMaxLength)]
+        public string? ImageUrl { get; set; }
+
         [Required]
         [ForeignKey(nameof(Restaurant))]
         public int RestaurantId { get; set; }

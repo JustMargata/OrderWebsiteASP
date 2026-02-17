@@ -24,7 +24,7 @@ namespace OrderWebsiteASP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Price,RestaurantId")] FoodItem foodItem)
+        public async Task<IActionResult> Create([Bind("Name,Price,ImageUrl,RestaurantId")] FoodItem foodItem)
         {
             ModelState.Remove("Restaurant");
             ModelState.Remove("OrderItems");
@@ -42,22 +42,17 @@ namespace OrderWebsiteASP.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var foodItem = await _context.FoodItems.FindAsync(id);
-            if (foodItem == null)
-            {
-                return NotFound();
-            }
+            if (foodItem == null) return NotFound();
+
             return View(foodItem);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,RestaurantId")] FoodItem foodItem)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,ImageUrl,RestaurantId")] FoodItem foodItem)
         {
             foodItem.Id = id;
 
@@ -73,14 +68,8 @@ namespace OrderWebsiteASP.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FoodItemExists(foodItem.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!FoodItemExists(foodItem.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction("Details", "Restaurants", new { id = foodItem.RestaurantId });
             }
@@ -89,18 +78,13 @@ namespace OrderWebsiteASP.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var foodItem = await _context.FoodItems
                 .Include(f => f.Restaurant)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (foodItem == null)
-            {
-                return NotFound();
-            }
+
+            if (foodItem == null) return NotFound();
 
             return View(foodItem);
         }

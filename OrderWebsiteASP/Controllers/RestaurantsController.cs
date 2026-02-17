@@ -26,19 +26,13 @@ namespace OrderWebsiteASP.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var restaurant = await _context.Restaurants
                 .Include(r => r.FoodItems)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
+            if (restaurant == null) return NotFound();
 
             return View(restaurant);
         }
@@ -52,7 +46,7 @@ namespace OrderWebsiteASP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Address")] Restaurant restaurant)
+        public async Task<IActionResult> Create([Bind("Id,Name,Address,ImageUrl")] Restaurant restaurant)
         {
             if (ModelState.IsValid)
             {
@@ -66,28 +60,20 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var restaurant = await _context.Restaurants.FindAsync(id);
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
+            if (restaurant == null) return NotFound();
+
             return View(restaurant);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address")] Restaurant restaurant)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,ImageUrl")] Restaurant restaurant)
         {
-            if (id != restaurant.Id)
-            {
-                return NotFound();
-            }
+            if (id != restaurant.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -98,14 +84,8 @@ namespace OrderWebsiteASP.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RestaurantExists(restaurant.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!RestaurantExists(restaurant.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -115,17 +95,12 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var restaurant = await _context.Restaurants
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
+
+            if (restaurant == null) return NotFound();
 
             return View(restaurant);
         }

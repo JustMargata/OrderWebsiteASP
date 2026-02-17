@@ -38,6 +38,15 @@
         </div>
     </header>
     <main class="flex-fill">
+        @if (TempData["Success"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        }
         @RenderBody()
     </main>
     <footer class="footer text-white mt-auto py-3 shadow-top">

@@ -22,13 +22,21 @@
         @foreach (var restaurant in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="restaurant-preview">
-                    <h3>@restaurant.Name</h3>
-                    <p>@restaurant.Address</p>
-                    <p>@(restaurant.FoodItems?.Count ?? 0) dishes available</p>
-                    <a asp-action="Details" asp-route-id="@restaurant.Id" class="btn btn-primary">
-                        <i class="bi bi-eye"></i> View Menu
-                    </a>
+                <div class="card h-100 shadow-sm">
+                    @if (!string.IsNullOrEmpty(restaurant.ImageUrl))
+                    {
+                        <img src="@restaurant.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@restaurant.Name" />
+                    }
+                    <div class="card-body">
+                        <h3 class="card-title">@restaurant.Name</h3>
+                        <p class="card-text text-muted">@restaurant.Address</p>
+                        <p class="card-text">@(restaurant.FoodItems?.Count ?? 0) dishes available</p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="Details" asp-route-id="@restaurant.Id" class="btn btn-primary">
+                            <i class="bi bi-eye"></i> View Menu
+                        </a>
+                    </div>
                 </div>
             </div>
         }

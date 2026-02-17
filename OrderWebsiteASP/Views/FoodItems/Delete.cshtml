@@ -1,9 +1,7 @@
 ﻿@model OrderWebsiteASP.Data.Models.FoodItem
-
 @{
     ViewData["Title"] = "Delete Food Item";
 }
-
 <div class="container">
     <h2><i class="bi bi-trash"></i> Delete Food Item</h2>
 
@@ -12,6 +10,10 @@
     </div>
 
     <div class="card">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@Model.Name" />
+        }
         <div class="card-body">
             <dl class="row">
                 <dt class="col-sm-3">Name</dt>

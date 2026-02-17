@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Home";
 }
+
 <div class="welcome-section text-center mb-5">
     <h1>Welcome to FoodOrder</h1>
     <p>Discover delicious food from top restaurants near you. Quick, easy, and tasty!</p>
@@ -11,19 +12,38 @@
         <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg mt-3">Login</a>
     }
 </div>
+
 <div class="container">
     <h2 class="mb-4 text-center">Featured Restaurants</h2>
     <div class="row g-4">
         @foreach (var restaurant in Model)
         {
             <div class="col-md-4">
-                <div class="restaurant-preview">
-                    <h3>@restaurant.Name</h3>
-                    <p>@restaurant.Address</p>
-                    <p>@restaurant.FoodItems.Count() dishes available</p>
-                    <a asp-controller="Restaurants" asp-action="Details" asp-route-id="@restaurant.Id" class="btn btn-primary">
-                        <i class="bi bi-eye"></i> View Menu
-                    </a>
+                <div class="card h-100 shadow-sm">
+                    @if (!string.IsNullOrEmpty(restaurant.ImageUrl))
+                    {
+                        <img src="@restaurant.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@restaurant.Name" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-shop text-white" style="font-size: 4rem;"></i>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h3 class="card-title">@restaurant.Name</h3>
+                        <p class="card-text text-muted">
+                            <i class="bi bi-geo-alt"></i> @restaurant.Address
+                        </p>
+                        <p class="card-text">
+                            <i class="bi bi-list-ul"></i> @restaurant.FoodItems.Count() dishes available
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a asp-controller="Restaurants" asp-action="Details" asp-route-id="@restaurant.Id" class="btn btn-primary w-100">
+                            <i class="bi bi-eye"></i> View Menu
+                        </a>
+                    </div>
                 </div>
             </div>
         }

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<OrderWebsiteASP.Data.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-bag"></i> My Orders</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> You have no orders yet.
+            <a asp-controller="Restaurants" asp-action="Index" class="alert-link">Browse restaurants</a>
+        </div>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">
+                            <i class="bi bi-shop"></i> @order.Restaurant.Name
+                        </h5>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> @order.OrderDate.ToString("dd MMM yyyy HH:mm")
+                        </small>
+                    </div>
+                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-primary btn-sm">
+                        <i class="bi bi-eye"></i> Details
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var item in order.OrderItems)
+                        {
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex justify-content-between align-items-center p-2 border rounded">
+                                    <div>
+                                        <strong>@item.FoodItem.Name</strong>
+                                        <span class="badge bg-success ms-2">x@(item.Quantity)</span>
+                                    </div>
+                                    <strong class="text-success">$@((item.FoodItem.Price * item.Quantity).ToString("F2"))</strong>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-end">
+                        <h5>Total: <span class="text-success">$@order.OrderItems.Sum(oi => oi.FoodItem.Price * oi.Quantity).ToString("F2")</span></h5>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -143,15 +143,15 @@ namespace OrderWebsiteASP.Data.Migrations
                         {
                             Id = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "787e62be-d67a-44b8-ae3d-ddd20be87c3c",
+                            ConcurrencyStamp = "811688c1-12d3-4ddf-bbdd-3c672377d228",
                             Email = "admin@foodorder.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@FOODORDER.COM",
                             NormalizedUserName = "ADMIN@FOODORDER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIgq8NTwkze1rq8zNxXd+htyncsDlTKEd1zQwXMHThdIlT6do1UhW9OqCr3wO9gz9Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFIEe2OA4uvdhaHi70Y8Tzg8fETfBREcUdGXhRk11+sIio+0EAa460qi3uQhaJHAnQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "973a9804-cd47-42f9-90a0-5604c12ca33b",
+                            SecurityStamp = "f52b0233-2783-4e5d-a851-f5f44f4dff37",
                             TwoFactorEnabled = false,
                             UserName = "admin@foodorder.com"
                         });
@@ -250,6 +250,10 @@ namespace OrderWebsiteASP.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -272,6 +276,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 1,
+                            ImageUrl = "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=400",
                             Name = "Margherita Pizza",
                             Price = 8.99m,
                             RestaurantId = 1
@@ -279,6 +284,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 2,
+                            ImageUrl = "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400",
                             Name = "Pepperoni Pizza",
                             Price = 9.99m,
                             RestaurantId = 1
@@ -286,6 +292,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 3,
+                            ImageUrl = "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400",
                             Name = "Four Cheese Pizza",
                             Price = 10.50m,
                             RestaurantId = 1
@@ -293,6 +300,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 4,
+                            ImageUrl = "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400",
                             Name = "Hawaiian Pizza",
                             Price = 9.75m,
                             RestaurantId = 1
@@ -300,6 +308,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 5,
+                            ImageUrl = "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=400",
                             Name = "Garlic Bread",
                             Price = 3.50m,
                             RestaurantId = 1
@@ -307,6 +316,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 6,
+                            ImageUrl = "https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400",
                             Name = "California Roll",
                             Price = 6.99m,
                             RestaurantId = 2
@@ -314,6 +324,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 7,
+                            ImageUrl = "https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400",
                             Name = "Salmon Nigiri",
                             Price = 5.50m,
                             RestaurantId = 2
@@ -321,6 +332,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 8,
+                            ImageUrl = "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400",
                             Name = "Tuna Sashimi",
                             Price = 7.50m,
                             RestaurantId = 2
@@ -328,6 +340,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 11,
+                            ImageUrl = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
                             Name = "Cheeseburger",
                             Price = 7.50m,
                             RestaurantId = 3
@@ -335,6 +348,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 12,
+                            ImageUrl = "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400",
                             Name = "Bacon Burger",
                             Price = 8.50m,
                             RestaurantId = 3
@@ -342,6 +356,7 @@ namespace OrderWebsiteASP.Data.Migrations
                         new
                         {
                             Id = 13,
+                            ImageUrl = "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400",
                             Name = "Veggie Burger",
                             Price = 7.00m,
                             RestaurantId = 3
@@ -401,6 +416,48 @@ namespace OrderWebsiteASP.Data.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("OrderWebsiteASP.Data.Models.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("Promotions");
+                });
+
             modelBuilder.Entity("OrderWebsiteASP.Data.Models.Restaurant", b =>
                 {
                     b.Property<int>("Id")
@@ -413,6 +470,10 @@ namespace OrderWebsiteASP.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -428,18 +489,21 @@ namespace OrderWebsiteASP.Data.Migrations
                         {
                             Id = 1,
                             Address = "123 Street Marten",
+                            ImageUrl = "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800",
                             Name = "Marten's Pizzaria"
                         },
                         new
                         {
                             Id = 2,
                             Address = "123 Happy Street Sofia",
+                            ImageUrl = "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800",
                             Name = "Happy Sofia"
                         },
                         new
                         {
                             Id = 3,
                             Address = "123 Happy Street Plovdiv",
+                            ImageUrl = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
                             Name = "Happy Plovdiv"
                         });
                 });
@@ -544,6 +608,17 @@ namespace OrderWebsiteASP.Data.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("OrderWebsiteASP.Data.Models.Promotion", b =>
+                {
+                    b.HasOne("OrderWebsiteASP.Data.Models.Restaurant", "Restaurant")
+                        .WithMany("Promotions")
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
+                });
+
             modelBuilder.Entity("OrderWebsiteASP.Data.Models.FoodItem", b =>
                 {
                     b.Navigation("OrderItems");
@@ -557,6 +632,8 @@ namespace OrderWebsiteASP.Data.Migrations
             modelBuilder.Entity("OrderWebsiteASP.Data.Models.Restaurant", b =>
                 {
                     b.Navigation("FoodItems");
+
+                    b.Navigation("Promotions");
                 });
 #pragma warning restore 612, 618
         }
