@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OrderWebsiteASP.Data;
-using OrderWebsiteASP.Data.Models;
+using OrderWebsiteASP.Services.Core.Contracts;
 
 namespace OrderWebsiteASP.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class FoodItemsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IFoodItemService _foodItemService;
 
-        public FoodItemsController(ApplicationDbContext context)
+        public FoodItemsController(IFoodItemService foodItemService)
         {
-            _context = context;
+            _foodItemService = foodItemService;
         }
 
         public IActionResult Create(int restaurantId)
@@ -24,27 +22,23 @@ namespace OrderWebsiteASP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Price,ImageUrl,RestaurantId")] FoodItem foodItem)
+        public async Task<IActionResult> Create(string name, decimal price, string? imageUrl, int restaurantId)
         {
-            ModelState.Remove("Restaurant");
-            ModelState.Remove("OrderItems");
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(foodItem);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Restaurants", new { id = foodItem.RestaurantId });
+                ViewBag.RestaurantId = restaurantId;
+                return View();
             }
 
-            ViewBag.RestaurantId = foodItem.RestaurantId;
-            return View(foodItem);
+            await _foodItemService.CreateAsync(name, price, imageUrl, restaurantId);
+            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var foodItem = await _context.FoodItems.FindAsync(id);
+            var foodItem = await _foodItemService.GetByIdAsync(id.Value);
             if (foodItem == null) return NotFound();
 
             return View(foodItem);
@@ -52,38 +46,25 @@ namespace OrderWebsiteASP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,ImageUrl,RestaurantId")] FoodItem foodItem)
+        public async Task<IActionResult> Edit(int id, string name, decimal price, string? imageUrl, int restaurantId)
         {
-            foodItem.Id = id;
+            if (!await _foodItemService.ExistsAsync(id)) return NotFound();
 
-            ModelState.Remove("Restaurant");
-            ModelState.Remove("OrderItems");
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(foodItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FoodItemExists(foodItem.Id)) return NotFound();
-                    else throw;
-                }
-                return RedirectToAction("Details", "Restaurants", new { id = foodItem.RestaurantId });
+                var foodItem = await _foodItemService.GetByIdAsync(id);
+                return View(foodItem);
             }
-            return View(foodItem);
+
+            await _foodItemService.EditAsync(id, name, price, imageUrl, restaurantId);
+            return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var foodItem = await _context.FoodItems
-                .Include(f => f.Restaurant)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var foodItem = await _foodItemService.GetByIdWithRestaurantAsync(id.Value);
             if (foodItem == null) return NotFound();
 
             return View(foodItem);
@@ -93,20 +74,11 @@ namespace OrderWebsiteASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var foodItem = await _context.FoodItems.FindAsync(id);
-            var restaurantId = foodItem.RestaurantId;
-            if (foodItem != null)
-            {
-                _context.FoodItems.Remove(foodItem);
-            }
+            var foodItem = await _foodItemService.GetByIdAsync(id);
+            var restaurantId = foodItem?.RestaurantId ?? 0;
 
-            await _context.SaveChangesAsync();
+            await _foodItemService.DeleteAsync(id);
             return RedirectToAction("Details", "Restaurants", new { id = restaurantId });
-        }
-
-        private bool FoodItemExists(int id)
-        {
-            return _context.FoodItems.Any(e => e.Id == id);
         }
     }
 }

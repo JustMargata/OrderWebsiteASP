@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OrderWebsiteASP.Data;
+using OrderWebsiteASP.Services.Core;
+using OrderWebsiteASP.Services.Core.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IFoodItemService, FoodItemService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllersWithViews();
 
@@ -36,8 +43,7 @@ using (var scope = app.Services.CreateScope())
     string[] roles = { "Admin", "User" };
     foreach (var role in roles)
     {
-        var roleExists = await roleManager.RoleExistsAsync(role);
-        if (!roleExists)
+        if (!await roleManager.RoleExistsAsync(role))
         {
             await roleManager.CreateAsync(new IdentityRole(role));
         }
@@ -45,6 +51,7 @@ using (var scope = app.Services.CreateScope())
 
     var adminEmail = "admin@foodorder.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
     if (adminUser == null)
     {
         var newAdmin = new IdentityUser
@@ -53,6 +60,7 @@ using (var scope = app.Services.CreateScope())
             Email = adminEmail,
             EmailConfirmed = true
         };
+
         var createResult = await userManager.CreateAsync(newAdmin, "Admin@123");
         if (createResult.Succeeded)
         {
@@ -87,6 +95,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();
