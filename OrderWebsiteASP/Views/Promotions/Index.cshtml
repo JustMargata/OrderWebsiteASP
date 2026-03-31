@@ -6,10 +6,10 @@
 
 <h2 class="mb-4">Active Promotions</h2>
 
-@if (User.IsInRole("Admin"))
+@if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
 {
     <p>
-        <a asp-action="Create" class="btn btn-primary">Add Promotion</a>
+        <a asp-action="Create" class="btn btn-success">Add Promotion</a>
     </p>
 }
 
@@ -21,14 +21,20 @@
 }
 else
 {
-    <div class="row">
+    <div class="row g-4 align-items-start">
         @foreach (var promotion in Model.Items)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
+            <div class="col-md-6 col-lg-4">
+                <div class="card promotion-card shadow-sm">
                     @if (!string.IsNullOrEmpty(promotion.ImageUrl))
                     {
-                        <img src="@promotion.ImageUrl" class="card-img-top" alt="@promotion.Title" />
+                        <img src="@promotion.ImageUrl" class="card-img-top promotion-card-img" alt="@promotion.Title" />
+                    }
+                    else
+                    {
+                        <img src="https://via.placeholder.com/600x200?text=No+Image"
+                             class="card-img-top promotion-card-img"
+                             alt="No image available" />
                     }
 
                     <div class="card-body">
@@ -44,19 +50,21 @@ else
                             </small>
                         </p>
 
-                        <a asp-action="Details" asp-route-id="@promotion.Id" class="btn btn-outline-primary btn-sm">
-                            Details
-                        </a>
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <a asp-action="Details" asp-route-id="@promotion.Id" class="btn btn-outline-success btn-sm">
+                                Details
+                            </a>
 
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@promotion.Id" class="btn btn-warning btn-sm">
-                                Edit
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@promotion.Id" class="btn btn-danger btn-sm">
-                                Delete
-                            </a>
-                        }
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@promotion.Id" class="btn btn-warning btn-sm">
+                                    Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@promotion.Id" class="btn btn-danger btn-sm">
+                                    Delete
+                                </a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

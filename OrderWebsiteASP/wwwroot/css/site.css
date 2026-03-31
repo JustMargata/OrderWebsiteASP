@@ -263,9 +263,59 @@ a {
         margin-top: 10px;
     }
 
+.promotion-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: auto !important;
+}
+
+    .promotion-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .promotion-card img.promotion-card-img,
+    .promotion-card .card-img-top.promotion-card-img {
+        width: 100%;
+        height: 220px !important;
+        min-height: 220px !important;
+        max-height: 220px !important;
+        object-fit: cover;
+        display: block;
+        border-radius: 0;
+    }
+
+    .promotion-card .card-body {
+        padding: 20px;
+    }
+
+    .promotion-card .card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #1f1f1f;
+    }
+
+    .promotion-card .card-text {
+        margin-bottom: 10px;
+        color: #555;
+    }
+
+
+
 @media (max-width: 768px) {
     .restaurant-card img.restaurant-card-img,
     .restaurant-card .card-img-top.restaurant-card-img {
+        height: 180px !important;
+        min-height: 180px !important;
+        max-height: 180px !important;
+    }
+
+    .promotion-card img.promotion-card-img,
+    .promotion-card .card-img-top.promotion-card-img {
         height: 180px !important;
         min-height: 180px !important;
         max-height: 180px !important;
