@@ -15,9 +15,14 @@ namespace OrderWebsiteASP.Controllers
             _restaurantService = restaurantService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
         {
-            var restaurants = await _restaurantService.GetAllAsync();
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var restaurants = await _restaurantService.GetPagedAsync(page, pageSize);
             return View(restaurants);
         }
 
