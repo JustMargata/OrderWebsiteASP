@@ -18,9 +18,14 @@ namespace OrderWebsiteASP.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
         {
-            var promotions = await _promotionService.GetActivePromotionsAsync();
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var promotions = await _promotionService.GetActivePromotionsPagedAsync(page, pageSize);
             return View(promotions);
         }
 

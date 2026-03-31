@@ -2,6 +2,7 @@
 using OrderWebsiteASP.Data;
 using OrderWebsiteASP.Data.Models;
 using OrderWebsiteASP.Services.Core.Contracts;
+using OrderWebsiteASP.ViewModels;
 
 namespace OrderWebsiteASP.Services.Core
 {
@@ -20,7 +21,38 @@ namespace OrderWebsiteASP.Services.Core
                 .Include(p => p.Restaurant)
                 .Where(p => p.EndDate >= DateTime.Now)
                 .OrderBy(p => p.EndDate)
+                .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<PagedResultViewModel<Promotion>> GetActivePromotionsPagedAsync(int page, int pageSize)
+        {
+            page = page < 1 ? 1 : page;
+            pageSize = pageSize < 1 ? 6 : pageSize;
+
+            IQueryable<Promotion> query = _context.Promotions
+                .Include(p => p.Restaurant)
+                .Where(p => p.EndDate >= DateTime.Now)
+                .OrderBy(p => p.EndDate)
+                .AsNoTracking();
+
+            int totalItems = await query.CountAsync();
+
+            List<Promotion> items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResultViewModel<Promotion>
+            {
+                Items = items,
+                Pagination = new PaginationViewModel
+                {
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalItems = totalItems
+                }
+            };
         }
 
         public async Task<Promotion?> GetByIdAsync(int id)
@@ -50,7 +82,10 @@ namespace OrderWebsiteASP.Services.Core
         public async Task DeleteAsync(int id)
         {
             var promotion = await _context.Promotions.FindAsync(id);
-            if (promotion == null) return;
+            if (promotion == null)
+            {
+                return;
+            }
 
             _context.Promotions.Remove(promotion);
             await _context.SaveChangesAsync();
