@@ -3,7 +3,7 @@
 @if (Model.TotalPages > 1)
 {
     <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center custom-pagination">
 
             <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
                 <a class="page-link"
