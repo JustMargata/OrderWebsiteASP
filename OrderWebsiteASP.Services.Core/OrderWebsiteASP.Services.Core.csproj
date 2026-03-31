@@ -15,5 +15,6 @@
 		<ProjectReference Include="..\OrderWebsiteASP.Data.Models\OrderWebsiteASP.Data.Models.csproj" />
 		<ProjectReference Include="..\OrderWebsiteASP.Data\OrderWebsiteASP.Data.csproj" />
 		<ProjectReference Include="..\OrderWebsiteASP.GCommon\OrderWebsiteASP.GCommon.csproj" />
+		<ProjectReference Include="..\OrderWebsiteASP.ViewModels\OrderWebsiteASP.ViewModels.csproj" />
 	</ItemGroup>
 </Project>
