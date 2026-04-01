@@ -304,7 +304,23 @@ a {
         color: #555;
     }
 
+.filter-form {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
+}
 
+    .filter-form .form-control,
+    .filter-form .form-select {
+        border-radius: 10px;
+        min-height: 46px;
+    }
+
+    .filter-form .btn {
+        min-width: 110px;
+    }
 
 @media (max-width: 768px) {
     .restaurant-card img.restaurant-card-img,
@@ -336,4 +352,7 @@ a {
         .welcome-section p {
             font-size: 1.1rem;
         }
+    .filter-form .btn {
+        width: 100%;
+    }
 }
