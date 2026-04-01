@@ -13,6 +13,20 @@
     </p>
 }
 
+<form method="get" asp-action="Index" class="row g-3 mb-4">
+    <div class="col-md-8">
+        <input type="text"
+               name="searchTerm"
+               value="@Model.Pagination.SearchTerm"
+               class="form-control"
+               placeholder="Search by restaurant name or address" />
+    </div>
+    <div class="col-md-4 d-flex gap-2">
+        <button type="submit" class="btn btn-success">Search</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
 <div class="row g-4 align-items-start">
     @foreach (var restaurant in Model.Items)
     {
@@ -24,7 +38,9 @@
                 }
                 else
                 {
-                    <img src="https://via.placeholder.com/600x200?text=No+Image" class="card-img-top restaurant-card-img" alt="No image available" />
+                    <img src="https://via.placeholder.com/600x200?text=No+Image"
+                         class="card-img-top restaurant-card-img"
+                         alt="No image available" />
                 }
 
                 <div class="card-body">
@@ -44,5 +60,12 @@
         </div>
     }
 </div>
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info mt-4">
+        No restaurants found for your search.
+    </div>
+}
 
 <partial name="_PaginationPartial" model="Model.Pagination" />

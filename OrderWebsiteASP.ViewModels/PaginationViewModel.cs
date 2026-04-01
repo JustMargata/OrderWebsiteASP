@@ -14,6 +14,12 @@ namespace OrderWebsiteASP.ViewModels
 
         public int TotalItems { get; set; }
 
+        public string? SearchTerm { get; set; }
+
+        public int? RestaurantId { get; set; }
+
+        public decimal? MinDiscount { get; set; }
+
         public int TotalPages =>
             PageSize <= 0
                 ? 0

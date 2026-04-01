@@ -23,15 +23,25 @@ namespace OrderWebsiteASP.Services.Core
                 .ToListAsync();
         }
 
-        public async Task<PagedResultViewModel<Restaurant>> GetPagedAsync(int page, int pageSize)
+        public async Task<PagedResultViewModel<Restaurant>> GetPagedAsync(int page, int pageSize, string? searchTerm = null)
         {
             page = page < 1 ? 1 : page;
             pageSize = pageSize < 1 ? 6 : pageSize;
 
             IQueryable<Restaurant> query = _context.Restaurants
                 .Include(r => r.FoodItems)
-                .OrderBy(r => r.Name)
                 .AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim().ToLower();
+
+                query = query.Where(r =>
+                    r.Name.ToLower().Contains(normalizedSearch) ||
+                    r.Address.ToLower().Contains(normalizedSearch));
+            }
+
+            query = query.OrderBy(r => r.Name);
 
             int totalItems = await query.CountAsync();
 
@@ -47,7 +57,8 @@ namespace OrderWebsiteASP.Services.Core
                 {
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalItems = totalItems
+                    TotalItems = totalItems,
+                    SearchTerm = searchTerm
                 }
             };
         }

@@ -7,7 +7,7 @@ namespace OrderWebsiteASP.Services.Core.Contracts
     {
         Task<IEnumerable<Restaurant>> GetAllAsync();
 
-        Task<PagedResultViewModel<Restaurant>> GetPagedAsync(int page, int pageSize);
+        Task<PagedResultViewModel<Restaurant>> GetPagedAsync(int page, int pageSize, string? searchTerm = null);
 
         Task<IEnumerable<Restaurant>> GetAllForSelectAsync();
 
