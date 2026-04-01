@@ -18,14 +18,16 @@ namespace OrderWebsiteASP.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 6, int? restaurantId = null, decimal? minDiscount = null)
         {
             if (page < 1)
             {
                 page = 1;
             }
 
-            var promotions = await _promotionService.GetActivePromotionsPagedAsync(page, pageSize);
+            var promotions = await _promotionService.GetActivePromotionsPagedAsync(page, pageSize, restaurantId, minDiscount);
+            ViewBag.Restaurants = await _restaurantService.GetAllForSelectAsync();
+
             return View(promotions);
         }
 

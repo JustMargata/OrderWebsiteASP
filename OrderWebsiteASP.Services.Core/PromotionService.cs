@@ -25,7 +25,11 @@ namespace OrderWebsiteASP.Services.Core
                 .ToListAsync();
         }
 
-        public async Task<PagedResultViewModel<Promotion>> GetActivePromotionsPagedAsync(int page, int pageSize)
+        public async Task<PagedResultViewModel<Promotion>> GetActivePromotionsPagedAsync(
+    int page,
+    int pageSize,
+    int? restaurantId = null,
+    decimal? minDiscount = null)
         {
             page = page < 1 ? 1 : page;
             pageSize = pageSize < 1 ? 6 : pageSize;
@@ -33,8 +37,19 @@ namespace OrderWebsiteASP.Services.Core
             IQueryable<Promotion> query = _context.Promotions
                 .Include(p => p.Restaurant)
                 .Where(p => p.EndDate >= DateTime.Now)
-                .OrderBy(p => p.EndDate)
                 .AsNoTracking();
+
+            if (restaurantId.HasValue)
+            {
+                query = query.Where(p => p.RestaurantId == restaurantId.Value);
+            }
+
+            if (minDiscount.HasValue)
+            {
+                query = query.Where(p => p.DiscountPercent >= minDiscount.Value);
+            }
+
+            query = query.OrderBy(p => p.EndDate);
 
             int totalItems = await query.CountAsync();
 
@@ -50,7 +65,9 @@ namespace OrderWebsiteASP.Services.Core
                 {
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalItems = totalItems
+                    TotalItems = totalItems,
+                    RestaurantId = restaurantId,
+                    MinDiscount = minDiscount
                 }
             };
         }

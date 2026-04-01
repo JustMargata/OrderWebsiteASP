@@ -1,14 +1,17 @@
 ﻿using OrderWebsiteASP.Data.Models;
 using OrderWebsiteASP.ViewModels;
 
-
 namespace OrderWebsiteASP.Services.Core.Contracts
 {
     public interface IPromotionService
     {
         Task<IEnumerable<Promotion>> GetActivePromotionsAsync();
 
-        Task<PagedResultViewModel<Promotion>> GetActivePromotionsPagedAsync(int page, int pageSize);
+        Task<PagedResultViewModel<Promotion>> GetActivePromotionsPagedAsync(
+            int page,
+            int pageSize,
+            int? restaurantId = null,
+            decimal? minDiscount = null);
 
         Task<Promotion?> GetByIdAsync(int id);
 
