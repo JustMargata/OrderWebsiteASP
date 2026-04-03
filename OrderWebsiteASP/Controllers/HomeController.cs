@@ -21,6 +21,13 @@ namespace OrderWebsiteASP.Controllers
             var restaurants = await _restaurantService.GetAllAsync();
             return View(restaurants);
         }
+
+        public IActionResult NotFound404()
+        {
+            Response.StatusCode = 404;
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -29,5 +36,6 @@ namespace OrderWebsiteASP.Controllers
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
         }
+        
     }
 }
