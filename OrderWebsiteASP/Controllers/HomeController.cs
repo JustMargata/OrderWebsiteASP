@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderWebsiteASP.Services.Core.Contracts;
+using OrderWebsiteASP.ViewModels;
+using System.Diagnostics;
 
 namespace OrderWebsiteASP.Controllers
 {
@@ -18,6 +20,14 @@ namespace OrderWebsiteASP.Controllers
         {
             var restaurants = await _restaurantService.GetAllAsync();
             return View(restaurants);
+        }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }
