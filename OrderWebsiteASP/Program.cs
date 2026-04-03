@@ -76,15 +76,17 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+    app.UseExceptionHandler("/Home/ServerError500");
+    app.UseHsts();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseStatusCodePagesWithReExecute("/Home/NotFound404");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
