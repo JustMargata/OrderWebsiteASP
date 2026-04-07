@@ -36,6 +36,11 @@ namespace OrderWebsiteASP.Services.Core
 
         public async Task CancelOrderAsync(int orderId, string userId)
         {
+            if (orderId <= 0 || string.IsNullOrWhiteSpace(userId))
+            {
+                return;
+            }
+
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
@@ -56,6 +61,11 @@ namespace OrderWebsiteASP.Services.Core
 
         public async Task AddToCartAsync(int foodItemId, int restaurantId, string userId)
         {
+            if (foodItemId <= 0 || restaurantId <= 0 || string.IsNullOrWhiteSpace(userId))
+            {
+                return;
+            }
+
             var foodItem = await _context.FoodItems
                 .FirstOrDefaultAsync(f => f.Id == foodItemId && f.RestaurantId == restaurantId);
 
@@ -105,6 +115,11 @@ namespace OrderWebsiteASP.Services.Core
 
         public async Task IncreaseQuantityAsync(int orderItemId, int orderId, string userId)
         {
+            if (orderItemId <= 0 || orderId <= 0 || string.IsNullOrWhiteSpace(userId))
+            {
+                return;
+            }
+
             var orderItem = await _context.OrderItems
                 .Include(oi => oi.Order)
                 .FirstOrDefaultAsync(oi => oi.Id == orderItemId && oi.OrderId == orderId);
@@ -152,6 +167,11 @@ namespace OrderWebsiteASP.Services.Core
 
         public async Task RemoveItemAsync(int orderItemId, int orderId, string userId)
         {
+            if (orderItemId <= 0 || orderId <= 0 || string.IsNullOrWhiteSpace(userId))
+            {
+                return;
+            }
+
             var orderItem = await _context.OrderItems
                 .Include(oi => oi.Order)
                 .FirstOrDefaultAsync(oi => oi.Id == orderItemId && oi.OrderId == orderId);

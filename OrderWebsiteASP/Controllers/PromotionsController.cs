@@ -25,6 +25,11 @@ namespace OrderWebsiteASP.Controllers
                 page = 1;
             }
 
+            if (pageSize <= 0)
+            {
+                pageSize = 6;
+            }
+
             var promotions = await _promotionService.GetActivePromotionsPagedAsync(page, pageSize, restaurantId, minDiscount);
             ViewBag.Restaurants = await _restaurantService.GetAllForSelectAsync();
 
@@ -34,10 +39,16 @@ namespace OrderWebsiteASP.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
 
             var promotion = await _promotionService.GetByIdWithRestaurantAsync(id.Value);
-            if (promotion == null) return NotFound();
+            if (promotion == null)
+            {
+                return NotFound();
+            }
 
             return View(promotion);
         }
@@ -47,6 +58,7 @@ namespace OrderWebsiteASP.Controllers
         {
             var restaurants = await _restaurantService.GetAllForSelectAsync();
             ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name");
+
             return View();
         }
 
@@ -55,12 +67,17 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Title,Description,DiscountPercent,StartDate,EndDate,ImageUrl,RestaurantId")] Promotion promotion)
         {
+            if (promotion.RestaurantId <= 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             ModelState.Remove("Restaurant");
 
             if (!ModelState.IsValid)
             {
                 var restaurants = await _restaurantService.GetAllForSelectAsync();
-                ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name");
+                ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name", promotion.RestaurantId);
                 return View(promotion);
             }
 
@@ -71,13 +88,20 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
 
             var promotion = await _promotionService.GetByIdAsync(id.Value);
-            if (promotion == null) return NotFound();
+            if (promotion == null)
+            {
+                return NotFound();
+            }
 
             var restaurants = await _restaurantService.GetAllForSelectAsync();
             ViewBag.Restaurants = new SelectList(restaurants, "Id", "Name", promotion.RestaurantId);
+
             return View(promotion);
         }
 
@@ -86,7 +110,15 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,DiscountPercent,StartDate,EndDate,ImageUrl,RestaurantId")] Promotion promotion)
         {
-            if (id != promotion.Id) return NotFound();
+            if (id <= 0 || promotion.Id <= 0 || id != promotion.Id)
+            {
+                return NotFound();
+            }
+
+            if (!await _promotionService.ExistsAsync(id))
+            {
+                return NotFound();
+            }
 
             ModelState.Remove("Restaurant");
 
@@ -104,10 +136,16 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
 
             var promotion = await _promotionService.GetByIdWithRestaurantAsync(id.Value);
-            if (promotion == null) return NotFound();
+            if (promotion == null)
+            {
+                return NotFound();
+            }
 
             return View(promotion);
         }
@@ -117,6 +155,16 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (id <= 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!await _promotionService.ExistsAsync(id))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             await _promotionService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }

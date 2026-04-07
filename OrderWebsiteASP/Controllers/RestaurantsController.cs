@@ -22,6 +22,11 @@ namespace OrderWebsiteASP.Controllers
                 page = 1;
             }
 
+            if (pageSize <= 0)
+            {
+                pageSize = 6;
+            }
+
             var restaurants = await _restaurantService.GetPagedAsync(page, pageSize, searchTerm);
             ViewBag.SearchTerm = searchTerm;
 
@@ -30,10 +35,16 @@ namespace OrderWebsiteASP.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
 
             var restaurant = await _restaurantService.GetByIdAsync(id.Value);
-            if (restaurant == null) return NotFound();
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
 
             return View(restaurant);
         }
@@ -49,19 +60,29 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(RestaurantCreateViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
             await _restaurantService.CreateAsync(model.Name, model.Address, model.ImageUrl);
+
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
 
             var restaurant = await _restaurantService.GetByIdAsync(id.Value);
-            if (restaurant == null) return NotFound();
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
 
             var model = new RestaurantEditViewModel
             {
@@ -79,21 +100,39 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, RestaurantEditViewModel model)
         {
-            if (id != model.Id) return NotFound();
+            if (id <= 0 || model.Id <= 0 || id != model.Id)
+            {
+                return NotFound();
+            }
 
-            if (!ModelState.IsValid) return View(model);
+            if (!await _restaurantService.ExistsAsync(id))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
             await _restaurantService.EditAsync(model.Id, model.Name, model.Address, model.ImageUrl);
+
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
 
             var restaurant = await _restaurantService.GetByIdAsync(id.Value);
-            if (restaurant == null) return NotFound();
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
 
             var model = new RestaurantDeleteViewModel
             {
@@ -111,7 +150,18 @@ namespace OrderWebsiteASP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (id <= 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!await _restaurantService.ExistsAsync(id))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             await _restaurantService.DeleteAsync(id);
+
             return RedirectToAction(nameof(Index));
         }
     }
