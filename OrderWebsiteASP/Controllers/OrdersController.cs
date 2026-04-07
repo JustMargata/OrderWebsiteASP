@@ -23,12 +23,18 @@ namespace OrderWebsiteASP.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var userId = GetUserId();
             var order = await _orderService.GetOrderByIdAsync(id.Value, userId);
 
-            if (order == null) return NotFound();
+            if (order == null)
+            {
+                return NotFound();
+            }
 
             return View(order);
         }
@@ -48,7 +54,9 @@ namespace OrderWebsiteASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveItem(int orderItemId, int orderId)
         {
-            await _orderService.RemoveItemAsync(orderItemId, orderId);
+            var userId = GetUserId();
+            await _orderService.RemoveItemAsync(orderItemId, orderId, userId);
+
             return RedirectToAction(nameof(Details), new { id = orderId });
         }
 
@@ -58,6 +66,7 @@ namespace OrderWebsiteASP.Controllers
         {
             var userId = GetUserId();
             await _orderService.CancelOrderAsync(orderId, userId);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -65,7 +74,9 @@ namespace OrderWebsiteASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IncreaseQuantity(int orderItemId, int orderId)
         {
-            await _orderService.IncreaseQuantityAsync(orderItemId);
+            var userId = GetUserId();
+            await _orderService.IncreaseQuantityAsync(orderItemId, orderId, userId);
+
             return RedirectToAction(nameof(Details), new { id = orderId });
         }
 
@@ -73,7 +84,9 @@ namespace OrderWebsiteASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DecreaseQuantity(int orderItemId, int orderId)
         {
-            await _orderService.DecreaseQuantityAsync(orderItemId, orderId);
+            var userId = GetUserId();
+            await _orderService.DecreaseQuantityAsync(orderItemId, orderId, userId);
+
             return RedirectToAction(nameof(Details), new { id = orderId });
         }
     }
